@@ -90,8 +90,9 @@ app.post('/upload', upload.array("file"), async(req, res) =>{
     console.log(results)
     //res.send('File uploaded successfully!');
     // res.json({status:"success"});
-    return res.json({ status: "success", message: "File uploaded successfully!" });
-
+   // return  res.send(`<h2>File uploaded successfully: ${results.Location}</h2><a href="/">Go back</a>`);
+  //  return res.send(`<h2>File(s) uploaded successfully:</h2><ul>${results.map(r => `<li>${r.Location}</li>`).join('')}</ul><a href="/">Go back</a>`);
+        return res.json({ status: "success", urls: results.map(r => r.Location) });
    
     }
     //console.log(req.files);
