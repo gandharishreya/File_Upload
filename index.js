@@ -1,10 +1,12 @@
 require("dotenv").config();
 const express=require("express")
+const path = require("path");
 const multer= require("multer");
 const { s3Uploadv2, s3Uploadv3 } = require("./s3Service");
 const uuid=require("uuid").v4
 const app =express()
 
+app.use(express.static(path.join(__dirname, 'public')));
 
 /*
 Array of files 
@@ -39,8 +41,10 @@ const storage = multer.diskStorage({
 
 const storage = multer.memoryStorage()
 
+const allowedTypes = ['image', 'application', 'text', 'video', 'audio'];
+
 const fileFilter = (req, file, cb) =>{
-    const allowedTypes = ['image', 'application'];
+    
     const fileType = file.mimetype.split("/")[0];
     if(allowedTypes.includes(fileType)
     ){
@@ -72,6 +76,11 @@ const upload = multer({
     }
 });
 */
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 app.post('/upload', upload.array("file"), async(req, res) =>{
     try{
     //const file= req.files[0]
@@ -79,7 +88,11 @@ app.post('/upload', upload.array("file"), async(req, res) =>{
     const results = await s3Uploadv3(req.files)
     console.timeEnd("upload-to-s3");
     console.log(results)
-    return res.json({status:"success"});
+    //res.send('File uploaded successfully!');
+    // res.json({status:"success"});
+    return res.json({ status: "success", message: "File uploaded successfully!" });
+
+   
     }
     //console.log(req.files);
     //res.json({status:"success", files: req.files});
