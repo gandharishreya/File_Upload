@@ -103,7 +103,7 @@ exports.s3Uploadv2 = async (files) => {
 // AWS SDK v3 Upload (FIXED)
 exports.s3Uploadv3 = async (files) => {
   const s3client = new S3Client({
-    region: process.env.AWS_REGION,
+    region: process.env.AWS_REGION || "us-east-1",
     credentials: {
       accessKeyId: process.env.AWS_ACCESS_KEY,
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
