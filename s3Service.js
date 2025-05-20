@@ -126,6 +126,7 @@ exports.s3Uploadv3 = async (files) => {
       };
 
       await s3client.send(new PutObjectCommand(params));
+      console.log("ENV REGION:", process.env.AWS_REGION);
 
       return {
         Location: `https://${bucket}.s3.${region}.amazonaws.com/${Key}`,
