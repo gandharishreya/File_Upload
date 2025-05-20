@@ -6,6 +6,13 @@ const { s3Uploadv2, s3Uploadv3 } = require("./s3Service");
 const uuid=require("uuid").v4
 const app =express()
 
+console.log("Loaded ENV Vars:", {
+  AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY,
+  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+  AWS_BUCKET_NAME: process.env.AWS_BUCKET_NAME,
+  AWS_REGION: process.env.AWS_REGION,
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 const storage = multer.memoryStorage()

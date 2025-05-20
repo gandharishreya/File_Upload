@@ -114,26 +114,28 @@ exports.s3Uploadv3 = async (files) => {
   const region = process.env.AWS_REGION;
 
   const uploadResults = await Promise.all(
-    files.map(async (file) => {
-      const Key = `uploads/${uuid()} - ${file.originalname}`;
+  files.map(async (file) => {
+      const Key = `uploads/${uuid()}-${file.originalname}`;
 
       const params = {
         Bucket: bucket,
         Key,
         Body: file.buffer,
         ContentType: file.mimetype,
-
       };
 
-      await s3client.send(new PutObjectCommand(params));
-      console.log("ENV REGION:", process.env.AWS_REGION);
-
-      return {
-        Location: `https://${bucket}.s3.${region}.amazonaws.com/${Key}`,
-        
-      };
+      try {
+        await s3client.send(new PutObjectCommand(params));
+        return {
+          Location: `https://${bucket}.s3.${region}.amazonaws.com/${Key}`,
+        };
+      } catch (err) {
+        console.error("S3 Upload error:", err);
+        throw err;
+      }
     })
   );
+
 
   return uploadResults;
 };
